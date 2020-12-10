@@ -4,7 +4,9 @@ import pathlib
 import joblib
 from pathlib import Path
 
-base_path= Path("/root/darknet")
+base_path= Path("/root/darknet")#
+
+
 
 def imShow(path):
   import cv2
@@ -31,34 +33,34 @@ proc = subprocess.Popen(['bash -c "'+make+'"'],
 out, err = proc.communicate()
 print(out,err)
 
-dataset = base_path/"Dataset"
-
-names = os.listdir(dataset/"train")
+dataset = os.path.join(base_path,"Dataset")
+train_dir=os.path.join(dataset,"train")
+names = os.listdir(train_dir)
 
 noof_classes = len(names)
-with open(base_path/"output"/"obj.names", 'w') as out:
+with open(os.path.join(base_path,"output","obj.names"), 'w') as out:
       for name in names:
             #name.replace(" ", "_")
             out.write(name + '\n')
 
 
-with open(base_path/"output"/"train.txt", 'w') as out:
+with open(os.path.join(base_path,"output","train.txt"), 'w') as out:
     for name in names:
-        for img in [f for f in os.listdir(dataset/"train"/+str(name)) if f.endswith('jpg')]:
+        for img in [f for f in os.listdir(os.path.join(dataset,"train",str(name))) if f.endswith('jpg')]:
             out.write(str(base_path)+'/Dataset/train/'+ name+'/' +img +'\n')
 
-with open(base_path/"output"/"valid.txt", 'w') as out:
+with open(os.path.join(base_path,"output","valid.txt"), 'w') as out:
     for name in names:
-        for img in [f for f in os.listdir(dataset/"validation"/+str(name)) if f.endswith('jpg')]:
+        for img in [f for f in os.listdir(os.path.join(dataset,"validation",str(name))) if f.endswith('jpg')]:
             out.write(str(base_path)+'/Dataset/validation/'+name+ '/'+ img +'\n')
 
 
-with open(base_path/"output"/"obj.data", 'w') as out:
+with open(os.path.join(base_path,"output","obj.data"), 'w') as out:
   out.write('classes ='+ str(noof_classes)+'\n')
   out.write('train ='+str(base_path) +'/output/train.txt\n')
   out.write('valid ='+str(base_path) +'/output/valid.txt\n')
   out.write('names ='+str(base_path)+'/output/obj.names\n')
-  out.write('backup ='+str(basepath)+'/output')
+  out.write('backup ='+str(base_path)+'/output')
 
 obj_path = str(base_path)+'/output/obj.data'
 cfgfile = str(base_path)+'/cfg/yolov4-custom.cfg'
